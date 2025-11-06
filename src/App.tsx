@@ -84,20 +84,31 @@ function Filter ({filter , setFilter, types}: filterProps){
 
 function App() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [capturedList, setCapturedList] = useState<Pokemon[]>([]);
+ const [capturedList, setCapturedList] = useState<Pokemon[]>(() => {
+  const capturatedpokemons = localStorage.getItem("savedpokemons");
+  return capturatedpokemons ? JSON.parse(capturatedpokemons) : [];
+});
   const [filter, setFilter] = useState({ name: '', type: '' });
   const AMOUNT = 10;
 
 function capturePokemon(p: Pokemon) {
   setCapturedList((capturedPokemons) => {
     if (capturedPokemons.some((c) => c.id === p.id)) return capturedPokemons; 
-    return [...capturedPokemons, p];
+    const addedPokemons =  [...capturedPokemons, p];
+    localStorage.setItem("savedpokemons", JSON.stringify(addedPokemons))
+    return addedPokemons;
+      
   });
 }
 
 function releasePokemon(p: Pokemon) {
-  setCapturedList((capturedPokemons) => capturedPokemons.filter((c) => c.id !== p.id));
+  setCapturedList((capturedPokemons) => {
+    const updatedList = capturedPokemons.filter((c) => c.id !== p.id);
+    localStorage.setItem("savedpokemons", JSON.stringify(updatedList));
+    return updatedList;
+  });
 }
+
 
   useEffect(() => {
     async function run() {
