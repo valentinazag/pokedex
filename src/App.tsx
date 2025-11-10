@@ -70,11 +70,15 @@ function Filters({
       <input
         value={filter.name}
         type="text"
-        onChange={(event) => setFilter({ ...filter, name: event.target.value })}
+        onChange={(event) => {
+          setFilter({ ...filter, name: event.target.value });
+        }}
       />
       <select
         value={filter.type}
-        onChange={(event) => setFilter({ ...filter, type: event.target.value })}
+        onChange={(event) => {
+          setFilter({ ...filter, type: event.target.value });
+        }}
       >
         <option value="">All types</option>
         {types.map((type) => (
@@ -125,7 +129,7 @@ function App() {
   }, []);
 
   const filterTypes = pokemons
-    .flatMap((p) => p.types.map((t) => t.type.name))
+    .flatMap((pokemon) => pokemon.types.map((type) => type.type.name))
     .reduce<string[]>((acc, type) => {
       if (!acc.includes(type)) {
         acc.push(type);
@@ -163,7 +167,11 @@ function App() {
               isCaptured={isCaptured}
               onCapture={() => {
                 setCapturedList((capturedPokemons) => {
-                  if (capturedPokemons.some((c) => c.id === pokemon.id))
+                  if (
+                    capturedPokemons.some(
+                      (captured) => captured.id === pokemon.id,
+                    )
+                  )
                     return capturedPokemons;
                   const addedPokemons = [...capturedPokemons, pokemon];
                   localStorage.setItem(
